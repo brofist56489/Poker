@@ -36,9 +36,16 @@ public class CardCalculator {
 		
 		if(cards.length == 0) return null;
 		
-		
 		int card = 0;
 		HandType type = HandType.HighCard;
+		
+		for(Card c : cards) {
+			for(Integer i : c.getVals()) {
+				if(i >= card) {
+					card = i;
+				}
+			}
+		}
 		
 		//One / Two Pair
 		int pairs = 0;
@@ -194,5 +201,36 @@ public class CardCalculator {
 		}
 		
 		return new Object[] {type, card};
+	}
+	
+	public static int[] findBestHand(int[] vals, HandType... hands) {
+		
+		int[] bestHands = new int[] {-1, -1};
+		HandType bh = null;
+		
+		for(int i = 0; i < hands.length; i++) {
+			HandType h = hands[i];
+			if(bh == null) {
+				bh = h;
+				bestHands[0] = i;
+				continue;
+			}
+			
+			if(bh.getVal() < h.getVal()) {
+				bh = h;
+				bestHands[0] = i;
+				bestHands[1] = -1;
+			} else if(bh.getVal() == h.getVal()) {
+				if(vals[bestHands[0]] < vals[i]) {
+					bestHands[0] = i;
+					bestHands[1] = -1;
+					bh = h;
+				} else if(vals[bestHands[0]] == vals[i]) {
+					bestHands[1] = i;
+				}
+			}
+		}
+		
+		return bestHands;
 	}
 }
