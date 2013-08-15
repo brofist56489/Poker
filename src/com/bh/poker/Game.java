@@ -44,6 +44,8 @@ public class Game extends Canvas implements Runnable {
 			MouseHandler.init(this);
 			
 			menu = new TestMenu();
+			
+			new Server().start();
 		}
 		
 		long lt = System.nanoTime();

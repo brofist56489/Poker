@@ -41,7 +41,7 @@ public class Image {
 		int tx = (tId % 16);
 		int ty = (tId / 16);
 		int toff = (tx * 16) + (ty * 16) * w;
-		int xs, ys;
+		int xs, ys, col;
 		
 		int ww = Game.WIDTH;
 		int hh = Game.HEIGHT;
@@ -55,7 +55,7 @@ public class Image {
 				xs = x;
 				if((flip & 0x01) == 0x01) xs = 15 - x;
 				
-				int col = pixels[xs + ys * w + toff];
+				col = pixels[xs + ys * w + toff];
 				if(col == 0x7f007f) continue;
 				
 				Game.pixels[(x + xp) + (y + yp) * ww] = col;

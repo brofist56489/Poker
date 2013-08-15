@@ -16,6 +16,8 @@ public class Button implements MenuObject {
 		this.w = text.length() + 3;
 		w /= 2;
 		this.h = 1;
+		this.x = x;
+		this.y = y;
 	}
 	
 	public Rectangle getRect() {
