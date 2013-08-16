@@ -13,6 +13,7 @@ public class Server extends NetBase implements Runnable {
 	private static Thread serverThread;
 	
 	public static GameState state;
+	private static Object var;
 	
 	public Server() {
 		super();
@@ -23,6 +24,7 @@ public class Server extends NetBase implements Runnable {
 		}
 		running = true;
 		state = GameState.JOINING;
+		var = null;
 	}
 	
 	public void start() {
@@ -35,6 +37,22 @@ public class Server extends NetBase implements Runnable {
 	public void stop() {
 		running = false;
 		serverThread = null;
+	}
+	
+	public static void tick() {
+		Server self = Game.server;
+		
+		switch(state) {
+		case PRE_GAME:
+		{
+			String m = PacketHandler.START_GAME();
+			self.sendtoall(m);
+			state = GameState.IN_GAME;
+		}
+			break;
+		default:
+			break;
+		}
 	}
 	
 	public void run() {

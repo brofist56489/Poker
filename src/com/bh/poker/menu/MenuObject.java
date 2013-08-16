@@ -1,4 +1,4 @@
-package com.bh.poker;
+package com.bh.poker.menu;
 
 import java.awt.Rectangle;
 

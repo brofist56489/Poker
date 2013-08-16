@@ -1,4 +1,5 @@
-package com.bh.poker;
+package com.bh.poker.menu;
+
 
 public class TestMenu extends Menu {
 	

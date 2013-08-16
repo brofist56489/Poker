@@ -1,8 +1,10 @@
-package com.bh.poker;
+package com.bh.poker.menu;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.bh.poker.MouseHandler;
 
 public abstract class Menu {
 	
@@ -13,7 +15,7 @@ public abstract class Menu {
 		Point p = new Point();
 		p.x = MouseHandler.x;
 		p.y = MouseHandler.y;
-		
+		hoverObject = null;
 		for(MenuObject o : objects) {
 			if(o.getRect().contains(p)) {
 				o.onHover();

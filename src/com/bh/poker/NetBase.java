@@ -9,7 +9,7 @@ public abstract class NetBase {
 	public static HashMap<String, Object> config = new HashMap<String, Object>();
 	
 	public static enum GameState {
-		JOINING, IN_GAME, BETWEEN_TURNS, PRE_GAME;
+		JOINING, IN_GAME, BETWEEN_TURNS, PRE_GAME, WAITING_FOR_PLAYER;
 	}
 	
 	public static void init() {

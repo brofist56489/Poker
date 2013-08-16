@@ -3,12 +3,17 @@ package com.bh.poker;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import com.bh.poker.menu.MainMenu;
+import com.bh.poker.menu.Menu;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
@@ -107,6 +112,9 @@ public class Game extends Canvas implements Runnable {
 		if(menu != null) {
 			menu.tick();
 		}
+		if(server != null) {
+			Server.tick();
+		}
 	}
 	
 	private void render() {
@@ -136,6 +144,35 @@ public class Game extends Canvas implements Runnable {
 		Game.frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
 		Game.frame.setSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		Game.frame.add(g);
+		Game.frame.addWindowListener(new WindowListener() {
+			
+			public void windowActivated(WindowEvent arg0) {
+			}
+
+			
+			public void windowClosed(WindowEvent arg0) {
+			}
+			
+			public void windowClosing(WindowEvent arg0) {
+				if(client != null) {
+					String m = PacketHandler.LEAVE(PLAYER_NAME);
+					client.send(m);
+				}
+			}
+			
+			public void windowDeactivated(WindowEvent arg0) {
+			}
+			
+			public void windowDeiconified(WindowEvent arg0) {
+			}
+			
+			public void windowIconified(WindowEvent arg0) {
+			}
+			
+			public void windowOpened(WindowEvent arg0) {
+			}
+			
+		});
 		Game.frame.setLocationRelativeTo(null);
 		Game.frame.setResizable(true);
 		Game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -1,5 +1,10 @@
-package com.bh.poker;
+package com.bh.poker.menu;
 
+import com.bh.poker.Game;
+import com.bh.poker.Image;
+import com.bh.poker.NetBase;
+import com.bh.poker.PacketHandler;
+import com.bh.poker.Server;
 import com.bh.poker.NetBase.GameState;
 
 public class JoiningMenu extends Menu {

@@ -20,4 +20,8 @@ public class PacketHandler {
 	public static String LEAVE(String name) {
 		return build(PacketParser.LEAVE, name);
 	}
+	
+	public static String START_GAME() {
+		return build(PacketParser.START_GAME);
+	}
 }

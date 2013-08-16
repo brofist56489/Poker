@@ -1,11 +1,16 @@
-package com.bh.poker;
+package com.bh.poker.menu;
 
 import javax.swing.JOptionPane;
+
+import com.bh.poker.Client;
+import com.bh.poker.Game;
+import com.bh.poker.PacketHandler;
+import com.bh.poker.Server;
 
 public class MainMenu extends Menu {
 	
 	public MainMenu() {
-		objects.add(new Button(0, 0, "Host Game") {
+		objects.add(new Button(Game.WIDTH / 2 - 56, 150, " Host Game ") {
 			public void onClick() {
 				Game.server = new Server();
 				Game.server.start();
@@ -19,7 +24,7 @@ public class MainMenu extends Menu {
 				Game.setMenu(new JoiningMenu());
 			}
 		});
-		objects.add(new Button(0, 100, "Join Game") {
+		objects.add(new Button(Game.WIDTH / 2 - 56, 180, " Join Game ") {
 			public void onClick() {
 				new Thread() {
 					public void run() {
@@ -30,6 +35,11 @@ public class MainMenu extends Menu {
 				}.start();
 				Game.client = new Client();
 				Game.client.start();
+			}
+		});
+		objects.add(new Button(Game.WIDTH / 2 - 56, 210, "    Quit    ") {
+			public void onClick() {
+				System.exit(0);
 			}
 		});
 	}
