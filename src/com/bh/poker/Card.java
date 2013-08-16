@@ -35,6 +35,21 @@ public class Card implements MenuObject {
 		return suit;
 	}
 	
+	public void setValues(List<Integer> values) {
+		this.values = values;
+	}
+	
+	public void setValue(int... i) {
+		this.values.clear();
+		for(int a : i) {
+			this.values.add(a);
+		}
+	}
+
+	public void setSuit(int suit) {
+		this.suit = suit;
+	}
+
 	public void render(int x, int y) {
 		Image.render(x, y, (visible) ? 0 : 2, 0);
 		Image.render(x, y + 16, (visible) ? 0 : 2, 3);

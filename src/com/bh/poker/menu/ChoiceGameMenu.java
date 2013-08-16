@@ -5,17 +5,18 @@ import com.bh.poker.Game;
 public class ChoiceGameMenu extends GameMenu {
 	
 	public ChoiceGameMenu() {
-		objects.add(new Button(0, Game.HEIGHT - 24, "Fold ") {
+		int yo = 4;
+		objects.add(new Button(10, Game.HEIGHT - 24 - yo, "Fold ") {
 			public void onClick() {
 				
 			}
 		});
-		objects.add(new Button(0, Game.HEIGHT - 48, "Raise") {
+		objects.add(new Button(10, Game.HEIGHT - 50 - yo, "Raise") {
 			public void onClick() {
 				
 			}
 		});
-		objects.add(new Button(0, Game.HEIGHT - 72, "Call ") {
+		objects.add(new Button(10, Game.HEIGHT - 76 - yo, "Call ") {
 			public void onClick() {
 				
 			}

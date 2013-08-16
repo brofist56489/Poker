@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.HashMap;
+import java.util.Random;
 
 public class Server extends NetBase implements Runnable {
 	
@@ -14,6 +16,8 @@ public class Server extends NetBase implements Runnable {
 	
 	public static GameState state;
 	private static Object var;
+	
+	private static HashMap<String, Card> dealtCards = new HashMap<String, Card>();
 	
 	public Server() {
 		super();
@@ -50,9 +54,34 @@ public class Server extends NetBase implements Runnable {
 			state = GameState.IN_GAME;
 		}
 			break;
+		case INIT_DEAL:
+		{
+			for(Player p : self.players) {
+			}
+		}
+			break;
 		default:
 			break;
 		}
+	}
+	
+	private static Card getNewCard() {
+		boolean works = false;
+		Card card = new Card(true, -1, -1);
+		Random r = new Random();
+		while(!works) {
+			card.setSuit(r.nextInt(4));
+			card.setValue(r.nextInt(12) + 2);
+			for(Card c : dealtCards.values()) {
+				if(c.getVal() != card.getVal()) {
+					if(c.getSuit() != card.getSuit()) {
+						works = true;
+					}
+				}
+			}
+		}
+		
+		return card;		
 	}
 	
 	public void run() {

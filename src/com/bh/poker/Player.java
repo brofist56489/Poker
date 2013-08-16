@@ -16,8 +16,6 @@ public class Player {
 	
 	public Player(int id, String name, InetAddress i, int p) {
 		cards = new Card[2];
-		cards[0] = new Card(false, 0, 4);
-		cards[1] = new Card(true, 3, 14, 1);
 		this.id = id;
 		this.name = name;
 		ip = i;
