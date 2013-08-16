@@ -2,14 +2,15 @@ package com.bh.poker;
 
 import java.net.DatagramPacket;
 
-import com.bh.poker.Server.GameState;
+import javax.swing.JOptionPane;
+
+import com.bh.poker.NetBase.GameState;
 
 public class PacketParser {
 	
 	public static final String JOIN = "0";
 	public static final String LEAVE = "1";
 	public static final String START_GAME = "2";
-	
 	
 	public static void parseServer(Server server, DatagramPacket packet) {
 		String msg = new String(packet.getData()).trim();
@@ -19,25 +20,84 @@ public class PacketParser {
 		case JOIN:
 		{
 			if(Server.state == GameState.JOINING) {
-				ServerPlayer p = new ServerPlayer(server.getNextId(), data[1], packet.getAddress(), packet.getPort());
+				Player p = new Player(server.getNextId(), data[1], packet.getAddress(), packet.getPort());
 				if(p.getId() == 0) {
-					server.config.put("host_player", p);
+					NetBase.config.put("host_player", p);
 				}
-				server.getPlayers().add(p);
-				String m = PacketHandler.JOIN(data[1]);
+				if(p.getId() == -100) {
+					String m = PacketHandler.JOIN(data[1], p.getId());
+					server.sendto(m, p);
+					break;
+				}
+				server.addPlayer(p);
+				String m = PacketHandler.JOIN(data[1], p.getId());
 				server.sendtoall(m, p);
+				
+				for(Player p1 : server.getPlayers()) {
+//					if(p1 != p) {
+						String a = PacketHandler.JOIN(p1.getName(), p1.getId());
+						server.sendto(a, p);
+//					}
+				}
+				System.out.println(p.getName() + " has joined");
 			}
 		}
 			break;
 		case LEAVE:
 		{
-			
+			if(Server.state == GameState.JOINING) {
+				server.removePlayer(data[1].trim());
+				server.sendtoall(msg);
+				System.out.println(data[1] + " has left");
+			}
 		}
 			break;
 		case START_GAME:
 		{
 			System.out.println("Client tried to start a game");
 		}	
+			break;
+		default:
+			break;
+		}
+	}
+
+	public static void parseClient(Client client, DatagramPacket packet) {
+		String msg = new String(packet.getData()).trim();
+		String[] data = msg.split("~");
+		
+		switch(data[0]) {
+		case JOIN:
+		{
+			if(data[1] == Game.PLAYER_NAME) {
+				if(data[2] == "-100") {
+					new Thread() {
+						public void run() {
+							Game.setMenu(new MainMenu());
+							JOptionPane.showMessageDialog(null, "Server is full.", Game.NAME, JOptionPane.ERROR_MESSAGE);
+						}
+					}.start();
+					break;
+				}
+			}
+			Player p = new Player(Integer.parseInt(data[2]), data[1]);
+			client.addPlayer(p);
+		}
+			break;
+		case LEAVE:
+		{
+			if(data[1] == Game.PLAYER_NAME) { }
+			else {
+				client.removePlayer(data[1]);
+			}
+		}
+			break;
+		case START_GAME:
+		{
+			
+		}
+			break;
+		default:
 			break;
 		}
 	}

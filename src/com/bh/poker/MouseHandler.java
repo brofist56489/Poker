@@ -73,8 +73,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 	}
 
 	public synchronized void mouseMoved(MouseEvent e) {
-		currentPosX = (int) (e.getX() * Game.WIDTH / Game.frame.getWidth());
-		currentPosY = (int) (e.getY() * Game.HEIGHT / Game.frame.getHeight());
+		currentPosX = e.getX() * Game.WIDTH / Game.game.getWidth();
+		currentPosY = e.getY() * Game.HEIGHT / Game.game.getHeight();
 	}
 
 	public void mouseClicked(MouseEvent e) {

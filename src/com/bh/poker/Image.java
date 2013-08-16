@@ -74,9 +74,18 @@ public class Image {
 		
 		render(xp, yp, 4 + 13 * 16, 0);
 		render(xp + w * 16 - 16, yp, 4 + 13 * 16, 1);
+		
+		for(int i = 1; i < w - 1; i++) {
+			render(xp + i * 16, yp, 5 + 13 * 16, 0);
+			if(h == 1) {
+				render(xp + i * 16, yp + 8, 5 + 13 * 16, 2);
+			} else {
+				render(xp + i * 16, yp + 16, 5 + 13 * 16, 2);
+			}
+		}
 	}
 	
-	public static void renderText(int xp, int yp, String text) {
+	public static void renderText(int xp, int yp, String text, int c, int scale) {
 		text = text.toUpperCase();
 		
 		int index = -1;
@@ -85,16 +94,37 @@ public class Image {
 			index = chars.indexOf(text.charAt(i));
 			if(index >= 0 && index < chars.length()) {
 				toff = ((index % 16) * 8) + ((int)(index / 16) * 8) * 128;
+				
 				for(int y = 0; y < 8; y++) {
-					if((y + yp) < 0 || (y + yp) >= Game.HEIGHT) continue;
 					for(int x = 0; x < 8; x++) {
-						if(((x + i * 8) + xp) < 0 || ((x + i * 8) + xp) >= Game.WIDTH) continue;
 						int col = font.pixels[x + y * 128 + toff];
 						
-						if(col == 0x7f007f) continue;
-						Game.pixels[((x + i * 8) + xp) + (y + yp) * Game.WIDTH] = col;
+						for(int yo = 0; yo < scale; yo++) {
+							int ya = ((y * scale) + yp + yo);
+							if(ya < 0 || ya >= Game.HEIGHT) continue;
+							
+							for(int xo = 0; xo < scale; xo++) {
+								int xa = (((x * scale) + i * 8 * scale) + xp + xo);
+								if(xa < 0 || xa >= Game.WIDTH) continue;
+								
+								if(col == 0x7f007f) continue;
+								if(col == 0xffffff) col = c;
+								Game.pixels[xa + ya * Game.WIDTH] = col;
+								
+							}
+						}
 					}
 				}
+			}
+		}
+	}
+	
+	public static void renderRect(int xp, int yp, int w, int h, int c) {
+		for(int y = 0; y < h; y++) {
+			if((y + yp) < 0 || (y + yp) >= Game.HEIGHT) continue;
+			for(int x = 0; x < w; x++) {
+				if((x + xp) < 0 || (x + xp) >= Game.WIDTH) continue;
+				Game.pixels[(x + xp) + (y + yp) * Game.WIDTH] = c;
 			}
 		}
 	}

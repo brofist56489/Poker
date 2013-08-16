@@ -11,6 +11,8 @@ public class Button implements MenuObject {
 	
 	public String text;
 	
+	public int color;
+	
 	public Button(int x, int y, String text) {
 		this.text = text;
 		this.w = text.length() + 3;
@@ -18,6 +20,7 @@ public class Button implements MenuObject {
 		this.h = 1;
 		this.x = x;
 		this.y = y;
+		color = 0x7f7f7f;
 	}
 	
 	public Rectangle getRect() {
@@ -32,15 +35,15 @@ public class Button implements MenuObject {
 
 	public void render() {
 		Image.renderFrame(x, y, w, h);
-		Image.renderText(x + 8, y + 8, text);
+		Image.renderText(x + 8, y + 8, text, color, 1);
 	}
 
 	public void onHover() {
-		
+		color = 0xffffff;
 	}
 
 	public void onNotHover() {
-		
+		color = 0x7f7f7f;
 	}
 
 }

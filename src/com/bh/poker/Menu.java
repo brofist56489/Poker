@@ -13,7 +13,7 @@ public abstract class Menu {
 		Point p = new Point();
 		p.x = MouseHandler.x;
 		p.y = MouseHandler.y;
-		hoverObject = null;
+		
 		for(MenuObject o : objects) {
 			if(o.getRect().contains(p)) {
 				o.onHover();
@@ -22,6 +22,7 @@ public abstract class Menu {
 				o.onNotHover();
 			}
 		}
+		
 		if(MouseHandler.buttonDownOnce(1) && hoverObject != null)
 			hoverObject.onClick();
 	}

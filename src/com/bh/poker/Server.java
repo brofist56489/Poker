@@ -4,42 +4,37 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-public class Server extends Thread {
-	
-	public static enum GameState {
-		JOINING, IN_GAME, BETWEEN_TURNS;
-	}
-	
-	private List<ServerPlayer> players;
-	
-	public HashMap<String, Object> config = new HashMap<String, Object>();
+public class Server extends NetBase implements Runnable {
 	
 	private DatagramSocket socket;
-	private final int port = 8008;
 	
 	public static boolean running = false;
+	private static Thread serverThread;
 	
 	public static GameState state;
 	
 	public Server() {
+		super();
 		try {
-			socket = new DatagramSocket(port);
+			socket = new DatagramSocket(NetBase.PORT);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
 		running = true;
-		players = new ArrayList<ServerPlayer>();
-		
-		config.put("max_players", 4);
-		config.put("host_player", null);
+		state = GameState.JOINING;
 	}
 	
-	public List<ServerPlayer> getPlayers() {
-		return players;
+	public void start() {
+		if(serverThread != null)
+			return;
+		serverThread = new Thread(this, "SERVER");
+		serverThread.start();
+	}
+	
+	public void stop() {
+		running = false;
+		serverThread = null;
 	}
 	
 	public void run() {
@@ -54,7 +49,18 @@ public class Server extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println(new String(packet.getData()).trim());
+			PacketParser.parseServer(this, packet);
+		}
+	}
+	
+	public void sendto(String msg, Player p) {
+		byte[] data = msg.getBytes();
+		DatagramPacket packet = new DatagramPacket(data, data.length, p.getIp(), p.getPort());
+		
+		try {
+			socket.send(packet);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -62,11 +68,11 @@ public class Server extends Thread {
 		sendtoall(msg, null);
 	}
 	
-	public void sendtoall(String msg, ServerPlayer p) {
+	public void sendtoall(String msg, Player p) {
 		DatagramPacket packet;
 		byte[] data = msg.getBytes();
 		
-		for(ServerPlayer player : players) {
+		for(Player player : players) {
 			if(p != player) {
 				packet = new DatagramPacket(data, data.length, player.getIp(), player.getPort());
 				try {
@@ -80,12 +86,12 @@ public class Server extends Thread {
 	
 	public int getNextId() {
 		int id = 0;
-		for(ServerPlayer p : players) {
+		for(Player p : players) {
 			if(p.getId() >= id) {
 				id = p.getId() + 1;
 			}
 			if(id == (Integer)config.get("max_players")) {
-				id = -1;
+				id = -100;
 				break;
 			}
 		}

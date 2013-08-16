@@ -2,7 +2,7 @@ package com.bh.poker;
 
 import java.net.InetAddress;
 
-public class ServerPlayer {
+public class Player {
 	private Card[] cards;
 	private int id;
 	private String name;
@@ -10,7 +10,11 @@ public class ServerPlayer {
 	private InetAddress ip;
 	private int port;
 	
-	public ServerPlayer(int id, String name, InetAddress i, int p) {
+	public Player(int id, String name) {
+		this(id, name, null, 0);
+	}
+	
+	public Player(int id, String name, InetAddress i, int p) {
 		cards = new Card[2];
 		this.id = id;
 		this.name = name;

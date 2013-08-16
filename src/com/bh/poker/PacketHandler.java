@@ -13,7 +13,11 @@ public class PacketHandler {
 		return r;
 	}
 	
-	public static String JOIN(String name) {
-		return build(PacketParser.JOIN, name);
+	public static String JOIN(String name, int id) {
+		return build(PacketParser.JOIN, name, id);
+	}
+	
+	public static String LEAVE(String name) {
+		return build(PacketParser.LEAVE, name);
 	}
 }

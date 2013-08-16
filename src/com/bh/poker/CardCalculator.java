@@ -2,7 +2,8 @@ package com.bh.poker;
 
 public class CardCalculator {
 	public static enum HandType {
-		HighCard(1, "High Card"), OnePair(2, "One Pair"), TwoPair(3, "Two Pair"), ThreeOfAKind(4, "Three of a Kind"), Straight(5, "Straight"), Flush(6, "Flush"), FullHouse(7, "Full House"), FourOfAKind(8, "Four of a Kind"), StraightFlush(9, "Straight Flush!"), RoyalFlush(10, "Royal Flush!!!");
+		Folded(0, "Folded"), HighCard(1, "High Card"), OnePair(2, "One Pair"), TwoPair(3, "Two Pair"), ThreeOfAKind(4, "Three of a Kind"), Straight(5, "Straight"),
+		Flush(6, "Flush"), FullHouse(7, "Full House"), FourOfAKind(8, "Four of a Kind"), StraightFlush(9, "Straight Flush!"), RoyalFlush(10, "Royal Flush!!!");
 		
 		private int val;
 		private String rep;

@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
@@ -16,6 +17,8 @@ public class Game extends Canvas implements Runnable {
 	public static final int HEIGHT = WIDTH * 3 / 4;
 	public static final int SCALE = 2;
 	public static final String NAME = "Texas Hold'em";
+	
+	public static String PLAYER_NAME;
 	
 	public static Game game;
 	
@@ -28,6 +31,8 @@ public class Game extends Canvas implements Runnable {
 	public static int tickCount = 0;
 	
 	public static Menu menu;
+	public static Client client;
+	public static Server server;
 	
 	public synchronized void start() {
 		if(running)
@@ -38,14 +43,14 @@ public class Game extends Canvas implements Runnable {
 	
 	public void run() {
 		{
+			NetBase.init();
+			
 			game = this;
 			
 			KeyHandler.init(this);
 			MouseHandler.init(this);
 			
-			menu = new TestMenu();
-			
-			new Server().start();
+			menu = new MainMenu();
 		}
 		
 		long lt = System.nanoTime();
@@ -57,6 +62,12 @@ public class Game extends Canvas implements Runnable {
 		
 		boolean shouldRender = false;
 		long ltr = System.currentTimeMillis();
+		
+		new Thread() {
+			public void run() {
+				PLAYER_NAME = JOptionPane.showInputDialog(frame, "Enter your name: ", NAME, JOptionPane.PLAIN_MESSAGE);
+			}
+		}.start();
 		
 		while(true) {
 			now = System.nanoTime();
@@ -82,6 +93,10 @@ public class Game extends Canvas implements Runnable {
 				ticks = frames = 0;
 			}
 		}
+	}
+
+	public static void setMenu(Menu m) {
+		menu = m;
 	}
 	
 	private void tick() {
