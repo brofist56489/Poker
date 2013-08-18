@@ -10,16 +10,16 @@ import com.bh.poker.menu.MainMenu;
 
 public class PacketParser {
 	
-	public static final String JOIN = "0";
-	public static final String LEAVE = "1";
-	public static final String START_GAME = "2";
-	public static final String CARD = "3";
+	public static final int JOIN = 0;
+	public static final int LEAVE = 1;
+	public static final int START_GAME = 2;
+	public static final int CARD = 3;
 	
 	public static void parseServer(Server server, DatagramPacket packet) {
 		String msg = new String(packet.getData()).trim();
 		String[] data = msg.split("~");
 		
-		switch(data[0]) {
+		switch(Integer.parseInt(data[0])) {
 		case JOIN:
 		{
 			if(Server.state == GameState.JOINING) {
@@ -69,7 +69,7 @@ public class PacketParser {
 		String msg = new String(packet.getData()).trim();
 		String[] data = msg.split("~");
 		
-		switch(data[0]) {
+		switch(Integer.parseInt(data[0])) {
 		case JOIN:
 		{
 			if(data[1] == Game.PLAYER_NAME) {
@@ -100,6 +100,14 @@ public class PacketParser {
 			Game.setMenu(new ChoiceGameMenu());
 		}
 			break;
+		case CARD:
+		{
+			String to = data[1];
+			String[] tos = to.split("_");
+			if(tos[1] == "Player") {
+				
+			}
+		}
 		default:
 			break;
 		}

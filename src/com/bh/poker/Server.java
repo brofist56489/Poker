@@ -57,6 +57,13 @@ public class Server extends NetBase implements Runnable {
 		case INIT_DEAL:
 		{
 			for(Player p : self.players) {
+				Card c1 = getNewCard();
+				Card c2 = getNewCard();
+				
+				dealtCards.put(p.getName() + "_1", c1);
+				dealtCards.put(p.getName() + "_2", c2);
+				
+				
 			}
 		}
 			break;

@@ -48,7 +48,7 @@ public class JoiningMenu extends Menu {
 		
 		int xo = 250;
 		int yo = 40;
-		int maxPlayers = (int) NetBase.config.get("max_players");
+		int maxPlayers = (Integer) NetBase.config.get("max_players");
 		for(int i = 0; i < maxPlayers; i++) {
 			Image.renderRect(xo, yo + i * 32, 150, 24, 0xff0000);
 		}

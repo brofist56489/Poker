@@ -24,4 +24,8 @@ public class PacketHandler {
 	public static String START_GAME() {
 		return build(PacketParser.START_GAME);
 	}
+	
+	public static String CARD(String to, Card c) {
+		return build(PacketParser.CARD, to, c.getSuit(), c.getVal());
+	}
 }
