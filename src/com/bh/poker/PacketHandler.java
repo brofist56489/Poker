@@ -26,6 +26,10 @@ public class PacketHandler {
 	}
 	
 	public static String CARD(String to, Card c) {
-		return build(PacketParser.CARD, to, c.getSuit(), c.getVal());
+		return build(PacketParser.CARD, to, c);
+	}
+
+	public static String SERVER_STOP() {
+		return build(PacketParser.SERVER_STOP);
 	}
 }

@@ -7,6 +7,8 @@ public class Player {
 	private int id;
 	private String name;
 	
+	private int bet;
+
 	private InetAddress ip;
 	private int port;
 	
@@ -44,5 +46,21 @@ public class Player {
 
 	public InetAddress getIp() {
 		return ip;
+	}
+	
+	public int getBet() {
+		return bet;
+	}
+
+	public void setBet(int bet) {
+		this.bet = bet;
+	}
+	
+	public void changeBet(int bet) {
+		this.bet += bet;
+	}
+
+	public void setCard(int cn, Card c) {
+		cards[cn] = c;
 	}
 }

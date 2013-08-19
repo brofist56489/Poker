@@ -1,6 +1,7 @@
 package com.bh.poker;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,11 +40,9 @@ public class Card implements MenuObject {
 		this.values = values;
 	}
 	
-	public void setValue(int... i) {
-		this.values.clear();
-		for(int a : i) {
-			this.values.add(a);
-		}
+	public void setValue(int i) {
+		this.values = new ArrayList<Integer>();
+		this.values.add(i);
 	}
 
 	public void setSuit(int suit) {
@@ -72,5 +71,18 @@ public class Card implements MenuObject {
 	public void onHover() {	
 	}
 	public void onNotHover() {
+	}
+	
+	public Card invisible() {
+		return new Card(false, suit, getVal());
+	}
+	
+	public String toString() {
+		return ((visible) ? "1" : "0") + "-" + suit + "-" + getVal();
+	}
+
+	public static Card parse(String c) {
+		String[] cs = c.split("-");
+		return new Card(cs[0].equals("1"), Integer.parseInt(cs[1]), Integer.parseInt(cs[2]));
 	}
 }

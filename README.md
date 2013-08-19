@@ -1,2 +1,4 @@
 Poker
 =====
+TODO: 
+	finish it

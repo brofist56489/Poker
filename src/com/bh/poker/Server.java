@@ -15,7 +15,9 @@ public class Server extends NetBase implements Runnable {
 	private static Thread serverThread;
 	
 	public static GameState state;
-	private static Object var;
+	private Object var;
+	private int intvar;
+	private int bet;
 	
 	private static HashMap<String, Card> dealtCards = new HashMap<String, Card>();
 	
@@ -29,6 +31,7 @@ public class Server extends NetBase implements Runnable {
 		running = true;
 		state = GameState.JOINING;
 		var = null;
+		intvar = 0;
 	}
 	
 	public void start() {
@@ -41,6 +44,9 @@ public class Server extends NetBase implements Runnable {
 	public void stop() {
 		running = false;
 		serverThread = null;
+		String m = PacketHandler.SERVER_STOP();
+		sendtoall(m);
+		socket.close();
 	}
 	
 	public static void tick() {
@@ -51,19 +57,40 @@ public class Server extends NetBase implements Runnable {
 		{
 			String m = PacketHandler.START_GAME();
 			self.sendtoall(m);
-			state = GameState.IN_GAME;
+			state = GameState.INIT_DEAL;
 		}
 			break;
 		case INIT_DEAL:
 		{
+			self.setPot(0);
 			for(Player p : self.players) {
 				Card c1 = getNewCard();
 				Card c2 = getNewCard();
 				
-				dealtCards.put(p.getName() + "_1", c1);
-				dealtCards.put(p.getName() + "_2", c2);
-				
-				
+				dealtCards.put(p.getName() + "_0", c1);
+				dealtCards.put(p.getName() + "_1", c2);
+				for(Player p1 : self.players) {
+					if(p.getName().equals(p1.getName())) {
+						self.sendto(PacketHandler.CARD(p.getName() + "_0", c1), p1);
+						self.sendto(PacketHandler.CARD(p.getName() + "_1", c2), p1);
+					} else {
+						self.sendto(PacketHandler.CARD(p.getName() + "_0", c1.invisible()), p1);
+						self.sendto(PacketHandler.CARD(p.getName() + "_1", c2.invisible()), p1);
+					}
+				}
+			}
+			state = GameState.BET_INIT;
+		}
+			break;
+		case BET_INIT:
+		{
+			Player p = (Player)self.var;
+			if(p.getBet() == self.bet) {
+				if(p.getId() + 1 < (Integer)NetBase.config.get("players")) {
+					self.var = self.getPlayer(p.getId() + 1);
+				} else {
+					
+				}
 			}
 		}
 			break;
@@ -79,6 +106,9 @@ public class Server extends NetBase implements Runnable {
 		while(!works) {
 			card.setSuit(r.nextInt(4));
 			card.setValue(r.nextInt(12) + 2);
+			if(dealtCards.isEmpty()) {
+				works = true;
+			}
 			for(Card c : dealtCards.values()) {
 				if(c.getVal() != card.getVal()) {
 					if(c.getSuit() != card.getSuit()) {

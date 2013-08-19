@@ -5,7 +5,7 @@ import java.net.DatagramPacket;
 import javax.swing.JOptionPane;
 
 import com.bh.poker.NetBase.GameState;
-import com.bh.poker.menu.ChoiceGameMenu;
+import com.bh.poker.menu.GameMenu;
 import com.bh.poker.menu.MainMenu;
 
 public class PacketParser {
@@ -14,6 +14,7 @@ public class PacketParser {
 	public static final int LEAVE = 1;
 	public static final int START_GAME = 2;
 	public static final int CARD = 3;
+	public static final int SERVER_STOP = 4;
 	
 	public static void parseServer(Server server, DatagramPacket packet) {
 		String msg = new String(packet.getData()).trim();
@@ -97,17 +98,24 @@ public class PacketParser {
 			break;
 		case START_GAME:
 		{
-			Game.setMenu(new ChoiceGameMenu());
+			Game.setMenu(new GameMenu());
 		}
 			break;
 		case CARD:
 		{
 			String to = data[1];
 			String[] tos = to.split("_");
-			if(tos[1] == "Player") {
-				
-			}
+			int cn = Integer.parseInt(tos[1]);
+			Player p = client.getPlayer(tos[0]);
+			p.setCard(cn, Card.parse(data[2]));
 		}
+			break;
+		case SERVER_STOP:
+		{
+			client.stop();
+			Game.setMenu(new MainMenu());
+		}
+			break;
 		default:
 			break;
 		}
