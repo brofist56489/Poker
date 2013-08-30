@@ -32,4 +32,16 @@ public class PacketHandler {
 	public static String SERVER_STOP() {
 		return build(PacketParser.SERVER_STOP);
 	}
+	
+	public static String TURN(String name, String options) {
+		return build(PacketParser.TURN, name, options);
+	}
+	
+	public static String FOLD(String name) {
+		return build(PacketParser.FOLD, name);
+	}
+
+	public static String RAISE(String name, int ammount) {
+		return build(PacketParser.RAISE, name, ammount);
+	}
 }

@@ -15,9 +15,8 @@ public class Server extends NetBase implements Runnable {
 	private static Thread serverThread;
 	
 	public static GameState state;
-	private Object var;
-	private int intvar;
-	private int bet;
+	public Player player;
+	public int intvar;
 	
 	private static HashMap<String, Card> dealtCards = new HashMap<String, Card>();
 	
@@ -30,7 +29,7 @@ public class Server extends NetBase implements Runnable {
 		}
 		running = true;
 		state = GameState.JOINING;
-		var = null;
+		player = null;
 		intvar = 0;
 	}
 	
@@ -55,6 +54,7 @@ public class Server extends NetBase implements Runnable {
 		switch(state) {
 		case PRE_GAME:
 		{
+			NetBase.config.put("players", self.players.size());
 			String m = PacketHandler.START_GAME();
 			self.sendtoall(m);
 			state = GameState.INIT_DEAL;
@@ -79,23 +79,44 @@ public class Server extends NetBase implements Runnable {
 					}
 				}
 			}
+			self.bet = 100;
 			state = GameState.BET_INIT;
 		}
 			break;
 		case BET_INIT:
 		{
-			Player p = (Player)self.var;
-			if(p.getBet() == self.bet) {
-				if(p.getId() + 1 < (Integer)NetBase.config.get("players")) {
-					self.var = self.getPlayer(p.getId() + 1);
-				} else {
-					
+			if(self.player == null) {
+				self.player = self.getPlayer(0);
+				self.sendtoall(PacketHandler.TURN(self.player.getName(), "0-1-3"));
+			}
+			if(self.player.hasGone()) {
+				if(self.player.getBet() == self.bet) {
+					if(!self.switchPlayer())
+						state = GameState.FLOP;
+				} else if (!self.player.isInTurn()) {
+					if(!self.switchPlayer())
+						state = GameState.FLOP;
 				}
 			}
 		}
 			break;
+		case FLOP:
+		{
+			
+		}
+			break;
 		default:
 			break;
+		}
+	}
+	
+	private boolean switchPlayer() {
+		if(player.getId() + 1 < (Integer)NetBase.config.get("players")) {
+			player = getPlayer(player.getId() + 1);
+			sendtoall(PacketHandler.TURN(player.getName(), "0-1-3"));
+			return true;
+		} else {
+			return false;
 		}
 	}
 	

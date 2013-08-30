@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import javax.swing.JOptionPane;
 
 import com.bh.poker.NetBase.GameState;
+import com.bh.poker.menu.ChoiceGameMenu;
 import com.bh.poker.menu.GameMenu;
 import com.bh.poker.menu.MainMenu;
 
@@ -15,6 +16,11 @@ public class PacketParser {
 	public static final int START_GAME = 2;
 	public static final int CARD = 3;
 	public static final int SERVER_STOP = 4;
+	public static final int TURN = 5;
+	public static final int FOLD = 6;
+	public static final int CALL = 7;
+	public static final int RAISE = 8;
+	public static final int COIN = 9;
 	
 	public static void parseServer(Server server, DatagramPacket packet) {
 		String msg = new String(packet.getData()).trim();
@@ -60,6 +66,26 @@ public class PacketParser {
 		{
 			System.out.println("Client tried to start a game");
 		}	
+			break;
+		case FOLD:
+		{
+			if(server.player == null) break;
+			if(!data[1].equals(server.player.getName())) break;
+			server.player.setInTurn(false);
+			server.player.setBet(0);
+			server.sendtoall(msg);
+			server.player.setHasGone(true);
+		}
+			break;
+		case RAISE:
+		{
+			if(server.player == null) break;
+			if(!data[1].equals(server.player.getName())) break;
+			int amm = Integer.parseInt(data[2]);
+			server.bet += amm;
+			server.sendtoall(msg);
+			server.player.setHasGone(true);
+		}
 			break;
 		default:
 			break;
@@ -116,6 +142,39 @@ public class PacketParser {
 			Game.setMenu(new MainMenu());
 		}
 			break;
+		case TURN:
+		{
+			if(data[1].equals(Game.PLAYER_NAME)) {
+				Game.setMenu(new ChoiceGameMenu(data[2]));
+			} else {
+				Game.setMenu(new GameMenu());
+			}
+		}
+			break;
+		case FOLD:
+		{
+			Player p = client.getPlayer(data[1]);
+			p.setInTurn(false);
+			p.setBet(0);
+		}
+			break;
+		case RAISE:
+		{
+			Player p = client.getPlayer(data[1]);
+			int amm = Integer.parseInt(data[2]);
+			if(p != null) {
+				p.changeBet(amm);
+			}
+			client.bet += amm;
+		}
+			break;
+		case COIN:
+		{
+			Player p = client.getPlayer(data[1]);
+			int i = Integer.parseInt(data[2]);
+			if(p != null)
+				p.changeCoin(i);
+		}
 		default:
 			break;
 		}

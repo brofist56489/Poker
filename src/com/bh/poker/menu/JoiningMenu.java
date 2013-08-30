@@ -46,14 +46,15 @@ public class JoiningMenu extends Menu {
 	public void render() {
 		super.render();
 		
-		int xo = 250;
-		int yo = 40;
+		int xo = 225;
+		int yo = 50;
+		int scale = 56;
 		int maxPlayers = (Integer) NetBase.config.get("max_players");
 		for(int i = 0; i < maxPlayers; i++) {
-			Image.renderRect(xo, yo + i * 32, 150, 24, 0xff0000);
+			Image.renderRect(xo, yo + i * scale, 175, 32, 0xff0000);
 		}
 		for(int i = 0; i < Game.client.getPlayers().size(); i++) {
-			Image.renderText(xo + 2, 2 + yo + i * 32, Game.client.getPlayers().get(i).getName(), 0xffffff, 2);
+			Image.renderText(xo + 2, 2 + yo + i * scale, Game.client.getPlayers().get(i).getName(), 0xffffff, 3);
 		}
 	}
 }

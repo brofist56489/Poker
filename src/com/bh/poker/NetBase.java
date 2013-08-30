@@ -17,7 +17,7 @@ public abstract class NetBase {
 	}
 	
 	public static void init() {
-		config.put("max_players", 8);
+		config.put("max_players", 4);
 		config.put("host_player", null);
 	}
 
@@ -25,6 +25,7 @@ public abstract class NetBase {
 	
 	protected List<Player> players;
 	protected int pot;
+	public int bet;
 	
 	public NetBase() {
 		players = new ArrayList<Player>();
